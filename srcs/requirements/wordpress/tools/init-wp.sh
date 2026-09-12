@@ -35,6 +35,16 @@ if [ ! -f "/var/www/html/wp-config.php" ]; then
         --role=author \
         --user_pass="${WP_USER_PASSWORD}" \
         --allow-root
+        wp config set WP_REDIS_HOST redis --allow-root
+
+    echo "[init-wp] Waiting for Redis to be reachable..."
+    until bash -c "echo > /dev/tcp/redis/6379" 2>/dev/null; do
+        sleep 1
+    done
+    echo "[init-wp] Redis is up"
+
+    wp plugin install redis-cache --activate --allow-root
+    wp redis enable --allow-root
 
     echo "[init-wp] WordPress provisioned"
 fi

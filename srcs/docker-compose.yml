@@ -33,6 +33,15 @@ services:
       - wp_user_password
     depends_on:
       - mariadb
+      - redis
+    networks:
+      - inception
+    restart: on-failure
+  
+  redis:
+    build: ./requirements/bonus/redis
+    image: redis:1.0
+    container_name: redis
     networks:
       - inception
     restart: on-failure
