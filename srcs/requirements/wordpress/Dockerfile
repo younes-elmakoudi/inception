@@ -9,12 +9,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     php-mbstring \
     php-zip \
     curl \
+    ca-certificates \
     default-mysql-client \
     && rm -rf /var/lib/apt/lists/*
 
 RUN curl -o /usr/local/bin/wp -sSL \
-    https://github.com/wp-cli/wp-cli/releases/latest/download/wp-cli.phar \
-    && chmod +x /usr/local/bin/wp
+    https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x /usr/local/bin/wp \
+    && wp --info --allow-root
 
 WORKDIR /var/www/html
 
