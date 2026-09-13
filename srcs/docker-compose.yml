@@ -77,6 +77,13 @@ services:
     networks:
       - inception
     restart: on-failure
+  static-site:
+    build: ./requirements/bonus/static-site
+    image: static-site:1.0
+    container_name: static-site
+    networks:
+      - inception
+    restart: on-failure
 
 volumes:
   db_data:
