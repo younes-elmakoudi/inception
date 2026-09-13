@@ -54,6 +54,8 @@ services:
     volumes:
       - wp_data:/var/www/html
       - adminer_data:/var/www/adminer
+      - blocklist:/etc/nginx/blocklist.d
+      - nginx_logs:/var/log/nginx      
     ports:
       - "443:443"
     depends_on:
@@ -97,6 +99,20 @@ services:
       - inception
     restart: on-failure
 
+  fail2ban:
+    build: ./requirements/bonus/fail2ban
+    image: fail2ban:1.0
+    container_name: fail2ban
+    volumes:
+      - nginx_logs:/var/log/nginx:ro
+      - blocklist:/etc/nginx/blocklist.d
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - nginx
+    networks:
+      - inception
+    restart: on-failure
+
 volumes:
   db_data:
     driver: local
@@ -111,7 +127,11 @@ volumes:
       o: bind
       device: /home/yel-mako/data/wordpress
   adminer_data:
-    driver: local  
+    driver: local
+  nginx_logs:
+    driver: local
+  blocklist:
+    driver: local
 
 networks:
   inception:
